@@ -1,3 +1,4 @@
+from cProfile import label
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import linear_model
@@ -42,17 +43,26 @@ def count_correct(classes, credences, cutoff):
         binary_prediction = p > cutoff
         if binary_prediction == (classes[i] == 1): #if prediciton (given cutoff) and actual value match
             n_correct_predictions += 1
-        #else:
-        #    if 
+        else:
+            if binary_prediction:
+                n_false_positive += 1
+            else:
+                n_false_negative += 1
     
-    return n_correct_predictions
+    return n_correct_predictions, n_false_negative, n_false_positive
 
 def plot_cutoff_effectiveness(cutoffs):
-    n_correct = [count_correct(classes, credences, cutoff) for cutoff in cutoffs]
-    return plt.plot(cutoffs, n_correct)
+    result = [count_correct(classes, credences, cutoff) for cutoff in cutoffs]
+    n_correct, fn, fp = zip(*result)
+    #n = len(n_correct)
+    plt.plot(cutoffs, n_correct, label="correct")
+    plt.plot(cutoffs, fn, label="false negative")
+    plt.plot(cutoffs, fp, label="false positive")
+    plt.legend()
 
 plot_cutoffs = np.concatenate((np.arange(0.04, step=0.001), np.arange(start=0.04, stop=0.5, step=0.05)))
-plot_cutoff_effectiveness(plot_cutoffs) #one false categorization (119 correct ones) for cutoff values of about  0.01 to 0.022
+plt.figure()
+plot_cutoff_effectiveness(plot_cutoffs) #one false categorization (119 correct ones) (this actually depends on sampling of training and test data. seen "only" 117 correct also) for cutoff values of about  0.01 to 0.022
 
 plt.show()
 
