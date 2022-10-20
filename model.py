@@ -1,10 +1,11 @@
-from cProfile import label
+#Some code exploring machine learning using a credit card fraud detection dataset from kaggle (https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud?resource=download&select=creditcard.csv)
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import linear_model
 import numpy as np
 
-df = pd.read_csv("creditcard.csv") #dataset with creditcard transactions, some of which are fraudulant. Want to predict, whether they are or not.
+df = pd.read_csv("creditcard.csv") #dataset (https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud?resource=download&select=creditcard.csv) with creditcard transactions, some of which are fraudulant. Want to predict, whether they are or not.
 
 #generate test set, in which fraudulent cases are overrepresented (since there are so few of them)
 grouped_df = df.groupby("Class")
